@@ -1,6 +1,5 @@
 package kh.farrukh.arch_mvp.data.remote
 
-import io.reactivex.rxjava3.core.Flowable
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -12,7 +11,7 @@ import retrofit2.http.Query
 interface MoviesApi {
 
     @GET("search/movie")
-    fun searchMovie(
+    suspend fun searchMovie(
         @Query("api_key") api_key: String,
-        @Query("query") q: String): Flowable<Response<SearchMovieResponse>>
+        @Query("query") q: String): Response<SearchMovieResponse>
 }

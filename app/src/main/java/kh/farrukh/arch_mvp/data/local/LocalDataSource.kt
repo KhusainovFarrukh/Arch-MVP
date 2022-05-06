@@ -1,10 +1,11 @@
 package kh.farrukh.arch_mvp.data.local
 
-import io.reactivex.rxjava3.core.Flowable
 import kh.farrukh.arch_mvp.data.Movie
+import kh.farrukh.arch_mvp.di.modules.IoDispatcher
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.concurrent.thread
+import kotlin.coroutines.CoroutineContext
 
 /**
  *Created by farrukh_kh on 4/3/22 4:14 PM
@@ -13,19 +14,22 @@ import kotlin.concurrent.thread
 @Singleton
 class LocalDataSource @Inject constructor(
     private val movieDao: MovieDao,
+    @IoDispatcher private val ioDispatcher: CoroutineContext
 ) {
 
-    val allMovies: Flowable<List<Movie>> by lazy { movieDao.all }
+    suspend fun getAll() = withContext(ioDispatcher) {
+        movieDao.getAll()
+    }
 
-    fun insert(movie: Movie) = thread {
+    suspend fun insert(movie: Movie) = withContext(ioDispatcher) {
         movieDao.insert(movie)
     }
 
-    fun delete(movie: Movie) = thread {
+    suspend fun delete(movie: Movie) = withContext(ioDispatcher) {
         movieDao.delete(movie.id)
     }
 
-    fun update(movie: Movie) = thread {
+    suspend fun update(movie: Movie) = withContext(ioDispatcher) {
         movieDao.update(movie)
     }
 }
