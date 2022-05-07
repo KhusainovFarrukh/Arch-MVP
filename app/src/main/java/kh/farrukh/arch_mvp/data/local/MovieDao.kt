@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
 import androidx.room.Update
 import kh.farrukh.arch_mvp.data.Movie
+import kotlinx.coroutines.flow.Flow
 
 /**
  *Created by farrukh_kh on 4/3/22 4:08 PM
@@ -14,8 +15,8 @@ import kh.farrukh.arch_mvp.data.Movie
 @Dao
 interface MovieDao {
 
-    @Query("SELECT * FROM movie_table")
-    suspend fun getAll(): List<Movie>
+    @get:Query("SELECT * FROM movie_table")
+    val allMovies: Flow<List<Movie>>
 
     @Insert(onConflict = REPLACE)
     suspend fun insert(movie: Movie)

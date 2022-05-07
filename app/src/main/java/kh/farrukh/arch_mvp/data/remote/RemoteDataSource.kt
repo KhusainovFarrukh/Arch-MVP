@@ -3,7 +3,9 @@ package kh.farrukh.arch_mvp.data.remote
 import kh.farrukh.arch_mvp.BuildConfig
 import kh.farrukh.arch_mvp.di.modules.IoDispatcher
 import kh.farrukh.arch_mvp.utils.toResult
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
@@ -18,12 +20,11 @@ class RemoteDataSource @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineContext
 ) {
 
-    suspend fun searchResults(query: String): Result<SearchMovieResponse> =
-        withContext(ioDispatcher) {
-            try {
-                moviesApi.searchMovie(BuildConfig.TMDB_API_KEY, query).toResult()
-            } catch (e: Exception) {
-                Result.failure(e)
-            }
+    fun searchResults(query: String): Flow<Result<SearchMovieResponse>> = flow {
+        try {
+            emit(moviesApi.searchMovie(BuildConfig.TMDB_API_KEY, query).toResult())
+        } catch (e: Exception) {
+            emit(Result.failure(e))
         }
+    }.flowOn(ioDispatcher)
 }

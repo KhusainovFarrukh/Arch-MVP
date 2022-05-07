@@ -2,7 +2,9 @@ package kh.farrukh.arch_mvp.data.local
 
 import kh.farrukh.arch_mvp.data.Movie
 import kh.farrukh.arch_mvp.di.modules.IoDispatcher
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
@@ -17,19 +19,18 @@ class LocalDataSource @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineContext
 ) {
 
-    suspend fun getAll() = withContext(ioDispatcher) {
-        movieDao.getAll()
-    }
+    private val ioScope by lazy { CoroutineScope(ioDispatcher) }
+    val allMovies: Flow<List<Movie>> by lazy { movieDao.allMovies }
 
-    suspend fun insert(movie: Movie) = withContext(ioDispatcher) {
+    fun insert(movie: Movie) = ioScope.launch {
         movieDao.insert(movie)
     }
 
-    suspend fun delete(movie: Movie) = withContext(ioDispatcher) {
+    fun delete(movie: Movie) = ioScope.launch {
         movieDao.delete(movie.id)
     }
 
-    suspend fun update(movie: Movie) = withContext(ioDispatcher) {
+    fun update(movie: Movie) = ioScope.launch {
         movieDao.update(movie)
     }
 }

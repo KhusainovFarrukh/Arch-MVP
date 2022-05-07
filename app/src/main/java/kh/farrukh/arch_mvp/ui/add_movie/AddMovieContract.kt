@@ -7,7 +7,7 @@ package kh.farrukh.arch_mvp.ui.add_movie
 class AddMovieContract {
 
     interface PresenterInterface {
-        suspend fun addMovie(title: String, releaseDate: String, posterPath: String)
+        fun addMovie(title: String, releaseDate: String, posterPath: String)
     }
 
     interface ViewInterface {

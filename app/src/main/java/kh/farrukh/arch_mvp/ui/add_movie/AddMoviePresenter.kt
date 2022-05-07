@@ -12,7 +12,7 @@ class AddMoviePresenter(
     private var dataSource: LocalDataSource
 ) : AddMovieContract.PresenterInterface {
 
-    override suspend fun addMovie(title: String, releaseDate: String, posterPath: String) {
+    override fun addMovie(title: String, releaseDate: String, posterPath: String) {
         if (title.isEmpty()) {
             viewInterface.displayError("Movie title cannot be empty.")
         } else {

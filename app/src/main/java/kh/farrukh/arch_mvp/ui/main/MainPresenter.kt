@@ -2,6 +2,7 @@ package kh.farrukh.arch_mvp.ui.main
 
 import kh.farrukh.arch_mvp.data.Movie
 import kh.farrukh.arch_mvp.data.local.LocalDataSource
+import kotlinx.coroutines.flow.collect
 import java.util.HashSet
 
 /**
@@ -15,9 +16,10 @@ class MainPresenter(
 
     override suspend fun getMyMoviesList() {
         // TODO: handle error
-        val movies = dataSource.getAll()
-        viewInterface.displayEmptyLayout(movies.isEmpty())
-        viewInterface.displayMovies(movies)
+        dataSource.allMovies.collect { movies ->
+            viewInterface.displayEmptyLayout(movies.isEmpty())
+            viewInterface.displayMovies(movies)
+        }
     }
 
     override suspend fun onDelete(selectedMovies: HashSet<Movie>) {
@@ -30,7 +32,5 @@ class MainPresenter(
         } else if (selectedMovies.size > 1) {
             viewInterface.displayMessage("Movies deleted.")
         }
-
-        getMyMoviesList()
     }
 }
