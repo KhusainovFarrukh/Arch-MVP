@@ -15,7 +15,7 @@ class SearchPresenter(
     override suspend fun getSearchResults(query: String) {
         dataSource.searchResults(query).handle(
             { response ->
-                viewInterface.displayEmptyLayout(response.totalResults == 0 && response.totalResults == null)
+                viewInterface.displayEmptyLayout(response.totalResults == 0 || response.totalResults == null)
                 viewInterface.displayResult(response)
             },
             { error ->
