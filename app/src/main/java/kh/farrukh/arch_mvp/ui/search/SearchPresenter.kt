@@ -17,7 +17,7 @@ class SearchPresenter(
         dataSource.searchResults(query).collect { result ->
             result.handle(
                 { response ->
-                    viewInterface.displayEmptyLayout(response.totalResults == 0 && response.totalResults == null)
+                    viewInterface.displayEmptyLayout(response.totalResults == 0 || response.totalResults == null)
                     viewInterface.displayResult(response)
                 },
                 { error ->
