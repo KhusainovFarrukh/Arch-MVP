@@ -84,10 +84,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), MainContract.Vie
 
     private val addMovieLauncher = startActivityForResult { result ->
         when (result?.resultCode) {
-            Activity.RESULT_OK -> {
-                displayMessage("Movie successfully added")
-                lifecycleScope.launchWhenStarted { presenter.getMyMoviesList() }
-            }
+            Activity.RESULT_OK -> displayMessage("Movie successfully added")
             Activity.RESULT_CANCELED -> displayMessage("No movie provided to add")
             else -> displayMessage("Movie could not been added")
         }
