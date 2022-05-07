@@ -1,22 +1,18 @@
 package kh.farrukh.arch_mvp.data.local
 
 import kh.farrukh.arch_mvp.data.Movie
-import kh.farrukh.arch_mvp.di.modules.IoDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
 /**
  *Created by farrukh_kh on 4/3/22 4:14 PM
  *kh.farrukh.arch_mvc.model
  **/
-@Singleton
-class LocalDataSource @Inject constructor(
+class LocalDataSource(
     private val movieDao: MovieDao,
-    @IoDispatcher private val ioDispatcher: CoroutineContext
+    private val ioDispatcher: CoroutineContext
 ) {
 
     private val ioScope by lazy { CoroutineScope(ioDispatcher) }

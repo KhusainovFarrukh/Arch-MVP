@@ -7,27 +7,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
-import dagger.hilt.android.AndroidEntryPoint
 import kh.farrukh.arch_mvp.R
 import kh.farrukh.arch_mvp.data.Movie
 import kh.farrukh.arch_mvp.data.remote.RemoteDataSource
 import kh.farrukh.arch_mvp.data.remote.SearchMovieResponse
 import kh.farrukh.arch_mvp.databinding.ActivitySearchBinding
 import kh.farrukh.arch_mvp.utils.toast
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 /**
  *Created by farrukh_kh on 4/6/22 5:49 PM
  *kh.farrukh.arch_mvc.ui
  **/
-@AndroidEntryPoint
 class SearchActivity : AppCompatActivity(R.layout.activity_search), SearchContract.ViewInterface {
 
     private val binding by viewBinding(ActivitySearchBinding::bind)
     private val searchAdapter by lazy { SearchAdapter(::returnToAddMovie) }
-
-    @Inject
-    lateinit var dataSource: RemoteDataSource
+    private val dataSource by inject<RemoteDataSource>()
 
     private val presenter: SearchContract.PresenterInterface by lazy {
         SearchPresenter(this, dataSource)
