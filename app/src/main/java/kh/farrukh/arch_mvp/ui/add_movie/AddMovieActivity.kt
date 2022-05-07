@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kh.farrukh.arch_mvp.R
@@ -16,7 +15,6 @@ import kh.farrukh.arch_mvp.utils.getString
 import kh.farrukh.arch_mvp.utils.load
 import kh.farrukh.arch_mvp.utils.startActivityForResult
 import kh.farrukh.arch_mvp.utils.toast
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -54,12 +52,10 @@ class AddMovieActivity : AppCompatActivity(R.layout.activity_add_movie),
     }
 
     private fun addMovie() = with(binding) {
-        lifecycleScope.launch {
-            val title = tetTitle.text.toString()
-            val releaseDate = tetReleaseYear.text.toString()
-            val posterPath = if (ivPoster.tag != null) ivPoster.tag.toString() else ""
-            presenter.addMovie(title, releaseDate, posterPath)
-        }
+        val title = tetTitle.text.toString()
+        val releaseDate = tetReleaseYear.text.toString()
+        val posterPath = if (ivPoster.tag != null) ivPoster.tag.toString() else ""
+        presenter.addMovie(title, releaseDate, posterPath)
     }
 
     private val searchMovieLauncher = startActivityForResult { result ->

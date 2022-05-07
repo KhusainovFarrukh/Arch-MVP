@@ -1,8 +1,9 @@
 package kh.farrukh.arch_mvp.ui.search
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kh.farrukh.arch_mvp.data.remote.RemoteDataSource
 import kh.farrukh.arch_mvp.utils.handle
-import kotlinx.coroutines.flow.collect
+import org.reactivestreams.Subscription
 
 /**
  *Created by farrukh_kh on 5/6/22 12:51 PM
@@ -13,16 +14,20 @@ class SearchPresenter(
     private var dataSource: RemoteDataSource
 ) : SearchContract.PresenterInterface {
 
-    override suspend fun getSearchResults(query: String) {
-        dataSource.searchResults(query).collect { result ->
-            result.handle(
-                { response ->
-                    viewInterface.displayEmptyLayout(response.totalResults == 0 || response.totalResults == null)
-                    viewInterface.displayResult(response)
-                },
-                { error ->
-                    viewInterface.displayError(error?.message ?: "Unknown error")
-                })
-        }
+    private var searchSubscription: Subscription? = null
+
+    override fun getSearchResults(query: String) {
+        dataSource.searchResults(query)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { subscription -> searchSubscription = subscription }
+            .subscribe(
+                { result -> result.handle(viewInterface::displayResult, viewInterface::displayError) },
+                viewInterface::displayError
+            )
+    }
+
+    override fun stop() {
+        searchSubscription?.cancel()
+        searchSubscription = null
     }
 }

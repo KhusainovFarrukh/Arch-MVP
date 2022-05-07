@@ -11,10 +11,7 @@ import kh.farrukh.arch_mvp.data.local.LocalDatabase
 import kh.farrukh.arch_mvp.data.local.MovieDao
 import kh.farrukh.arch_mvp.data.remote.MoviesApi
 import kh.farrukh.arch_mvp.data.remote.RetrofitClient
-import kotlinx.coroutines.Dispatchers
-import javax.inject.Qualifier
 import javax.inject.Singleton
-import kotlin.coroutines.CoroutineContext
 
 /**
  *Created by farrukh_kh on 4/7/22 11:47 PM
@@ -22,9 +19,6 @@ import kotlin.coroutines.CoroutineContext
  **/
 @[Module InstallIn(SingletonComponent::class)]
 object AppModule {
-
-    @[Provides IoDispatcher]
-    fun provideIoDispatcher(): CoroutineContext = Dispatchers.IO
 
     @[Provides Singleton]
     fun provideMoviesApi(): MoviesApi = RetrofitClient.moviesApi
@@ -38,7 +32,3 @@ object AppModule {
             .allowMainThreadQueries()
             .build()
 }
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-annotation class IoDispatcher

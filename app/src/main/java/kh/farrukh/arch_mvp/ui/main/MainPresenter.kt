@@ -1,9 +1,9 @@
 package kh.farrukh.arch_mvp.ui.main
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kh.farrukh.arch_mvp.data.Movie
 import kh.farrukh.arch_mvp.data.local.LocalDataSource
-import kotlinx.coroutines.flow.collect
-import java.util.HashSet
+import org.reactivestreams.Subscription
 
 /**
  *Created by farrukh_kh on 5/6/22 12:22 PM
@@ -14,15 +14,22 @@ class MainPresenter(
     private var dataSource: LocalDataSource
 ) : MainContract.PresenterInterface {
 
-    override suspend fun getMyMoviesList() {
-        // TODO: handle error
-        dataSource.allMovies.collect { movies ->
-            viewInterface.displayEmptyLayout(movies.isEmpty())
-            viewInterface.displayMovies(movies)
-        }
+    private var allMoviesSubscription: Subscription? = null
+
+    override fun getMyMoviesList() {
+        dataSource.allMovies
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { subscription -> allMoviesSubscription = subscription }
+            .subscribe(
+                { movies ->
+                    viewInterface.displayMovies(movies)
+                    viewInterface.displayEmptyLayout(movies.isEmpty())
+                },
+                viewInterface::displayError
+            )
     }
 
-    override suspend fun onDelete(selectedMovies: HashSet<Movie>) {
+    override fun onDelete(selectedMovies: HashSet<Movie>) {
         for (movie in selectedMovies) {
             dataSource.delete(movie)
         }
@@ -32,5 +39,10 @@ class MainPresenter(
         } else if (selectedMovies.size > 1) {
             viewInterface.displayMessage("Movies deleted.")
         }
+    }
+
+    override fun stop() {
+        allMoviesSubscription?.cancel()
+        allMoviesSubscription = null
     }
 }

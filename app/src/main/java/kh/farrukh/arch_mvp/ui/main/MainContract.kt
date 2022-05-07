@@ -10,8 +10,9 @@ import java.util.HashSet
 class MainContract {
 
     interface PresenterInterface {
-        suspend fun getMyMoviesList()
-        suspend fun onDelete(selectedMovies: HashSet<Movie>)
+        fun getMyMoviesList()
+        fun onDelete(selectedMovies: HashSet<Movie>)
+        fun stop()
     }
 
     interface ViewInterface {
@@ -20,6 +21,6 @@ class MainContract {
         fun clearSelectedMovies()
         fun goToAddMovie()
         fun displayMessage(message: String)
-        fun displayError(message: String)
+        fun displayError(error: Throwable)
     }
 }

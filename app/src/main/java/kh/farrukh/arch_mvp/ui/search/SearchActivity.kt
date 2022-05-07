@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kh.farrukh.arch_mvp.R
@@ -43,7 +42,12 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search), SearchContra
 
     override fun onStart() {
         super.onStart()
-        lifecycleScope.launchWhenStarted { presenter.getSearchResults(query) }
+        presenter.getSearchResults(query)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        presenter.stop()
     }
 
     private fun setupViews() = with(binding) {
@@ -64,11 +68,11 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search), SearchContra
         toast(message)
     }
 
-    override fun displayError(message: String) = with(binding) {
+    override fun displayError(error: Throwable?) = with(binding) {
         pbLoading.isVisible = false
         rvSearchResults.isVisible = false
         tvNoMovies.isVisible = true
-        tvNoMovies.text = message
+        tvNoMovies.text = error?.message ?: "Unknown error"
     }
 
     override fun returnToAddMovie(movie: Movie) {

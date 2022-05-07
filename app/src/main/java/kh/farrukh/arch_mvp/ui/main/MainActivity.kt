@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kh.farrukh.arch_mvp.R
@@ -17,7 +16,6 @@ import kh.farrukh.arch_mvp.databinding.ActivityMainBinding
 import kh.farrukh.arch_mvp.ui.add_movie.AddMovieActivity
 import kh.farrukh.arch_mvp.utils.startActivityForResult
 import kh.farrukh.arch_mvp.utils.toast
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -40,9 +38,12 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), MainContract.Vie
 
     override fun onStart() {
         super.onStart()
-        lifecycleScope.launchWhenStarted {
-            presenter.getMyMoviesList()
-        }
+        presenter.getMyMoviesList()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        presenter.stop()
     }
 
     private fun setupViews() = with(binding) {
@@ -70,9 +71,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), MainContract.Vie
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.deleteMenuItem) {
-            lifecycleScope.launch {
-                presenter.onDelete(mainAdapter.selectedMovies)
-            }
+            presenter.onDelete(mainAdapter.selectedMovies)
         }
 
         return super.onOptionsItemSelected(item)
@@ -84,10 +83,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), MainContract.Vie
 
     private val addMovieLauncher = startActivityForResult { result ->
         when (result?.resultCode) {
-            Activity.RESULT_OK -> {
-                displayMessage("Movie successfully added")
-                lifecycleScope.launchWhenStarted { presenter.getMyMoviesList() }
-            }
+            Activity.RESULT_OK -> displayMessage("Movie successfully added")
             Activity.RESULT_CANCELED -> displayMessage("No movie provided to add")
             else -> displayMessage("Movie could not been added")
         }
@@ -97,7 +93,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), MainContract.Vie
         toast(message)
     }
 
-    override fun displayError(message: String) {
-        toast(message)
+    override fun displayError(error: Throwable) {
+        toast(error.message ?: "Unknown error")
     }
 }

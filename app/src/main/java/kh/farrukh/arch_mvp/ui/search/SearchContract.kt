@@ -10,7 +10,8 @@ import kh.farrukh.arch_mvp.data.remote.SearchMovieResponse
 class SearchContract {
 
     interface PresenterInterface {
-        suspend fun getSearchResults(query: String)
+        fun getSearchResults(query: String)
+        fun stop()
     }
 
     interface ViewInterface {
@@ -18,6 +19,6 @@ class SearchContract {
         fun displayEmptyLayout(isVisible: Boolean)
         fun returnToAddMovie(movie: Movie)
         fun displayMessage(message: String)
-        fun displayError(message: String)
+        fun displayError(error: Throwable?)
     }
 }
