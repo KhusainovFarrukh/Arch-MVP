@@ -8,17 +8,20 @@ import kh.farrukh.arch_mvp.data.Movie
  *Created by farrukh_kh on 4/3/22 4:03 PM
  *kh.farrukh.arch_mvc.model
  **/
-class SearchMovieResponse {
+class SearchMovieResponse(
     @SerializedName("page")
     @Expose
-    var page: Int? = null
+    var page: Int? = null,
+
     @SerializedName("total_results")
     @Expose
-    var totalResults: Int? = null
+    var totalResults: Int? = null,
+
     @SerializedName("total_pages")
     @Expose
-    var totalPages: Int? = null
+    var totalPages: Int? = null,
+
     @SerializedName("results")
     @Expose
-    var results: List<Movie>? = null
-}
+    var results: List<Movie>? = null,
+)
