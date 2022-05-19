@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
-import dagger.hilt.android.AndroidEntryPoint
 import kh.farrukh.arch_mvp.R
 import kh.farrukh.arch_mvp.data.local.LocalDataSource
 import kh.farrukh.arch_mvp.data.remote.RetrofitClient.TMDB_IMAGE_URL
@@ -17,20 +16,17 @@ import kh.farrukh.arch_mvp.utils.load
 import kh.farrukh.arch_mvp.utils.startActivityForResult
 import kh.farrukh.arch_mvp.utils.toast
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 /**
  *Created by farrukh_kh on 4/3/22 10:26 PM
  *kh.farrukh.arch_mvc.ui
  **/
-@AndroidEntryPoint
 class AddMovieActivity : AppCompatActivity(R.layout.activity_add_movie),
     AddMovieContract.ViewInterface {
 
     private val binding by viewBinding(ActivityAddMovieBinding::bind)
-
-    @Inject
-    lateinit var dataSource: LocalDataSource
+    private val dataSource by inject<LocalDataSource>()
 
     private val presenter: AddMovieContract.PresenterInterface by lazy {
         AddMoviePresenter(this, dataSource)

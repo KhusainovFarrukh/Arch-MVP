@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
-import dagger.hilt.android.AndroidEntryPoint
 import kh.farrukh.arch_mvp.R
 import kh.farrukh.arch_mvp.data.Movie
 import kh.farrukh.arch_mvp.data.local.LocalDataSource
@@ -18,16 +17,13 @@ import kh.farrukh.arch_mvp.ui.add_movie.AddMovieActivity
 import kh.farrukh.arch_mvp.utils.startActivityForResult
 import kh.farrukh.arch_mvp.utils.toast
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity(R.layout.activity_main), MainContract.ViewInterface {
 
     private val binding by viewBinding(ActivityMainBinding::bind)
     private val mainAdapter by lazy { MainAdapter() }
-
-    @Inject
-    lateinit var dataSource: LocalDataSource
+    private val dataSource by inject<LocalDataSource>()
 
     private val presenter: MainContract.PresenterInterface by lazy {
         MainPresenter(this, dataSource)

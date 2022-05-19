@@ -1,6 +1,8 @@
 package kh.farrukh.arch_mvp.data.local
 
+import android.content.Context
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import kh.farrukh.arch_mvp.data.Movie
@@ -17,6 +19,12 @@ abstract class LocalDatabase : RoomDatabase() {
     abstract fun movieDao(): MovieDao
 
     companion object {
-        const val DB_NAME = "movie_database"
+
+        private const val DB_NAME = "movie_database"
+
+        fun getInstance(context: Context): LocalDatabase =
+            Room.databaseBuilder(context, LocalDatabase::class.java, DB_NAME)
+                .allowMainThreadQueries()
+                .build()
     }
 }
