@@ -12,7 +12,7 @@ import kotlin.coroutines.CoroutineContext
  *kh.farrukh.arch_mvc.model
  **/
 @Singleton
-class LocalDataSource @Inject constructor(
+open class LocalDataSource @Inject constructor(
     private val movieDao: MovieDao,
     @IoDispatcher private val ioDispatcher: CoroutineContext
 ) {
