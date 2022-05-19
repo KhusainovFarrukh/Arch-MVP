@@ -11,21 +11,21 @@ import kotlin.concurrent.thread
  *kh.farrukh.arch_mvc.model
  **/
 @Singleton
-class LocalDataSource @Inject constructor(
+open class LocalDataSource @Inject constructor(
     private val movieDao: MovieDao
 ) {
 
-    val allMovies: Flowable<List<Movie>> by lazy { movieDao.allMovies }
+    open val allMovies: Flowable<List<Movie>> by lazy { movieDao.allMovies }
 
-    fun insert(movie: Movie) = thread {
+    open fun insert(movie: Movie) = thread {
         movieDao.insert(movie)
     }
 
-    fun delete(movie: Movie) = thread {
+    open fun delete(movie: Movie) = thread {
         movieDao.delete(movie.id)
     }
 
-    fun update(movie: Movie) = thread {
+    open fun update(movie: Movie) = thread {
         movieDao.update(movie)
     }
 }
